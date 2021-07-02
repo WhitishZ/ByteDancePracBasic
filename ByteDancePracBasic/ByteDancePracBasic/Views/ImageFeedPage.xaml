@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ByteDancePracBasic.Views.ImageFeedPage"
+             xmlns:vm="clr-namespace:ByteDancePracBasic.ViewModels"
+             xmlns:cvt="clr-namespace:ByteDancePracBasic.Converters"
+             Title="Feed Cell Prototype">
+    <!--
+    NOTE:
+    In this view, ImageFeedViewModel is created declaratively. When ImageFeedPage is created, an instance of view model is
+    automatically constructed. But this method has a disadvantage that it requires a parameter-less constructor in the
+    view model. Use dependency injection to gain more control and loose coupling between the view and view model.
+    See E-Book "Enterprise Application Patterns using XamarinForms" page 17 for more details.
+    -->
+    <ContentPage.BindingContext>
+        <vm:ImageFeedListViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cvt:ImageSourceConverter x:Key="imageSourceConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ListView x:Name="FeedListView" VerticalOptions="FillAndExpand" HasUnevenRows="True" ItemsSource="{Binding Path=FeedList}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="10">
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{Binding Path=Feed.MediaInfo.AvatarUrl, Converter={x:StaticResource imageSourceConverter}}" HeightRequest="36"/>
+                                <StackLayout Orientation="Vertical">
+                                    <Label Text="{Binding Path=Feed.MediaInfo.Name}" FontSize="16" />
+                                    <Label Text="{Binding Path=Feed.MediaInfo.VerifiedContent}" FontSize="12" />
+                                </StackLayout>
+                            </StackLayout>
+                            <Label Text="{Binding Path=Feed.Content}" FontSize="16" MaxLines="5"/>
+                            <!-- Change image layout to Grid if you like. -->
+                            <Image Source="{Binding Path=Feed.ImageUrl, Converter={x:StaticResource imageSourceConverter}}" HorizontalOptions="StartAndExpand" HeightRequest="180" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="36" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.33*" />
+                                    <ColumnDefinition Width="0.33*" />
+                                    <ColumnDefinition Width="0.33*" />
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalOptions="Center">
+                                    <Image Source="share_feed" />
+                                    <Label Text="{Binding Path=Feed.ShareCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
+                                    <Image Source="comment_feed" />
+                                    <Label Text="{Binding Path=Feed.CommentCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalOptions="Center">
+                                    <Image Source="like_feed" />
+                                    <Label Text="{Binding Path=Feed.LikeCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                            </Grid>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>

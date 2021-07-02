@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ByteDancePracBasic.ViewModels"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="ByteDancePracBasic.Views.VideoFeedPage"
+             Title="Feed With Video">
+    <ContentPage.BindingContext>
+        <vm:VideoFeedListViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ListView x:Name="FeedListView" VerticalOptions="FillAndExpand" HasUnevenRows="True" ItemsSource="{Binding Path=FeedList}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="10">
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{Binding Path=Feed.MediaInfo.AvatarUrl}" HeightRequest="36"/>
+                                <StackLayout Orientation="Vertical">
+                                    <Label Text="{Binding Path=Feed.MediaInfo.Name}" FontSize="16" />
+                                    <Label Text="{Binding Path=Feed.MediaInfo.VerifiedContent}" FontSize="12" />
+                                </StackLayout>
+                            </StackLayout>
+                            <Label Text="{Binding Path=Feed.Abstract}" FontSize="16" MaxLines="5"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="180" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <xct:MediaElement Grid.Row="0" Grid.Column="0"
+                                    Source="{Binding Path=Feed.VideoUrl}" AutoPlay="False" ShowsPlaybackControls="True"
+                                    HeightRequest="180" HorizontalOptions="FillAndExpand" Aspect="AspectFit" />
+                                <ImageButton Grid.Row="0" Grid.Column="0"
+                                    Source="{Binding Path=Feed.DetailVideoLargeImage.Url}" BackgroundColor="Transparent"
+                                    Command="{Binding Path=PlayVideo}" IsVisible="{Binding Path=ShowVideoPlaceholder}" 
+                                    HeightRequest="180" HorizontalOptions="FillAndExpand" />
+                            </Grid>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="36" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.33*" />
+                                    <ColumnDefinition Width="0.33*" />
+                                    <ColumnDefinition Width="0.33*" />
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalOptions="Center">
+                                    <Image Source="share_feed" />
+                                    <Label Text="{Binding Path=Feed.ShareCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
+                                    <Image Source="comment_feed" />
+                                    <Label Text="{Binding Path=Feed.CommentCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalOptions="Center">
+                                    <Image Source="like_feed" />
+                                    <Label Text="{Binding Path=Feed.LikeCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                            </Grid>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>

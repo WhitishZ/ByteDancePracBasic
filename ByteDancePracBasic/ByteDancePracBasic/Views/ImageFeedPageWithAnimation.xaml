@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ByteDancePracBasic.Views.ImageFeedPageWithAnimation"
+             xmlns:vm="clr-namespace:ByteDancePracBasic.ViewModels"
+             Title="Feed Cell With Animation">
+    <ContentPage.BindingContext>
+        <vm:ImageFeedListViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ListView x:Name="FeedListView" VerticalOptions="FillAndExpand" HasUnevenRows="True" ItemsSource="{Binding Path=FeedList}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="10">
+                            <StackLayout Orientation="Horizontal">
+                                <!--NOTE:
+                                Image from web not showing:
+                                The root cause is that the image returned from server lacks some essential headers.
+                                There are two workarounds for this problem.
+                                1. Use converters to download the image first, and then show it. (e.g. ImageFeedPage.xaml)
+                                2. Change Android project settings. (e.g. ImageFeedPageWithAnimation.xaml)
+                                See https://stackoverflow.com/questions/58128252/xamarin-forms-image-source-not-working-from-url
+                                -->
+                                <Image Source="{Binding Path=Feed.MediaInfo.AvatarUrl}" HeightRequest="36"/>
+                                <StackLayout Orientation="Vertical">
+                                    <Label Text="{Binding Path=Feed.MediaInfo.Name}" FontSize="16" />
+                                    <Label Text="{Binding Path=Feed.MediaInfo.VerifiedContent}" FontSize="12" />
+                                </StackLayout>
+                            </StackLayout>
+                            <Label Text="{Binding Path=Feed.Content}" FontSize="16" MaxLines="5"/>
+                            <Image Source="{Binding Path=Feed.ImageUrl}" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" HeightRequest="180" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="36" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.33*" />
+                                    <ColumnDefinition Width="0.33*" />
+                                    <ColumnDefinition Width="0.33*" />
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalOptions="CenterAndExpand">
+                                    <Image Source="share_feed" />
+                                    <Label Text="{Binding Path=Feed.ShareCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" HorizontalOptions="CenterAndExpand">
+                                    <Image Source="comment_feed" />
+                                    <Label Text="{Binding Path=Feed.CommentCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalOptions="CenterAndExpand">
+                                    <Image Source="like_feed" />
+                                    <Label Text="{Binding Path=Feed.LikeCount}" FontSize="16" VerticalOptions="Center" />
+                                </StackLayout>
+                                <!-- NOTE:
+                                Overlapping elements without using AbsoluteLayout:
+                                1. Use RelativeLayout.
+                                2. Use a Grid. Adding two elements on the same row/column, to overlap the second to the first.
+                                3. Set VisualElement.TranslationY property.
+                                See https://stackoverflow.com/questions/58056717/xamarin-forms-how-to-place-one-layout-on-top-of-another-layout
+                                -->
+                                <Button BackgroundColor="Transparent" Grid.Row="0" Grid.Column="2"
+                                        Clicked="OnLikeFeedClicked" Command="{Binding Path=LikeThisFeed}"
+                                        HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+                                <!-- NOTE:
+                                Best MVVM practice to handle command when view is also needed:
+                                You can use the command to tell the ViewModel to do something logic based,
+                                and then use the clicked event to trigger a UI-only action in the code behind such as play a sound.
+                                See https://forums.xamarin.com/discussion/151703/best-mvvm-practice-to-handle-command-when-view-is-also-needed
+                                -->
+                            </Grid>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>
